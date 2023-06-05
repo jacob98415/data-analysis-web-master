@@ -1,0 +1,54 @@
+{% extends "layout.html" %} {% block content %}
+<div class="p-4 text-center">
+  <table class="mx-auto border border-collapse border-gray-600 table-auto">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="px-4 py-2">Physisch/Virtuell/Container</th>
+        <th class="px-4 py-2">CPU/vCPU</th>
+        <th class="px-4 py-2">Ram/vRam</th>
+        <th class="px-4 py-2">Netzwerk</th>
+        <th class="px-4 py-2">Hochverfügbarkeit</th>
+        <th class="px-4 py-2">Speichertyp</th>
+        <th class="px-4 py-2">Speichermenge</th>
+        <th class="px-4 py-2">Betriebssystem</th>
+        <th class="px-4 py-2">Erreichbarkeit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border border-gray-600">
+        <td class="px-4 py-2">Physisch 1</td>
+        <td class="px-4 py-2">4</td>
+        <td class="px-4 py-2">16 GB</td>
+        <td class="px-4 py-2">LAN</td>
+        <td class="px-4 py-2">Ja</td>
+        <td class="px-4 py-2">SSD</td>
+        <td class="px-4 py-2">500 GB</td>
+        <td class="px-4 py-2">Windows Server 2019</td>
+        <td class="px-4 py-2">Erreichbar</td>
+      </tr>
+      <tr class="border border-gray-600">
+        <td class="px-4 py-2">Virtuell 1</td>
+        <td class="px-4 py-2">2</td>
+        <td class="px-4 py-2">8 GB</td>
+        <td class="px-4 py-2">WAN</td>
+        <td class="px-4 py-2">Nein</td>
+        <td class="px-4 py-2">HDD</td>
+        <td class="px-4 py-2">1000 GB</td>
+        <td class="px-4 py-2">Ubuntu 20.04</td>
+        <td class="px-4 py-2">Erreichbar</td>
+      </tr>
+      <tr class="border border-gray-600">
+        <td class="px-4 py-2">Container 1</td>
+        <td class="px-4 py-2">1</td>
+        <td class="px-4 py-2">2 GB</td>
+        <td class="px-4 py-2">LAN</td>
+        <td class="px-4 py-2">Ja</td>
+        <td class="px-4 py-2">SSD</td>
+        <td class="px-4 py-2">250 GB</td>
+        <td class="px-4 py-2">Ubuntu 18.04</td>
+        <td class="px-4 py-2">Erreichbar</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

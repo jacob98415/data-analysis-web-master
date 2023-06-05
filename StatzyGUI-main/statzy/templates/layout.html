@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/build/theme.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='/css/theme.css') }}" />
+    <script src="{{ url_for('static', filename='/js/script.js') }}"></script>
+    <style>
+      main {
+        min-height: calc(100vh - 88px);
+        /* 88px is the combined height of the navbar and footer */
+      }
+    </style>
+    <title>{{ title }}</title>
+  </head>
+
+  <body class="bg-gray-100">
+    <!--! Navbar start-->
+    <nav class="fixed top-0 left-0 right-0 z-50 flex flex-wrap items-center justify-between navbar-padding bg-blue-500">
+      <div class="flex items-center flex-shrink-0 mr-6 text-white">
+        <a href="/start">
+          <span class="text-xl font-semibold tracking-tight">Statzy</span>
+        </a>
+      </div>
+
+      <div class="block lg:hidden">
+        <button class="flex items-center px-3 py-2 text-blue-200 border border-blue-400 rounded hover:text-white hover:border-white">
+          <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <title>Menu</title>
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+          </svg>
+        </button>
+      </div>
+      <div class="flex-grow block w-full lg:flex lg:items-center lg:w-auto">
+        <div class="text-sm lg:flex-grow navbar-links">
+          <a href="/person" class="block mt-4 text-blue-200 lg:inline-block lg:mt-0 hover:text-white"> Personen <span></span></a>
+          <a href="/fachverfahrenSuche" class="block mt-4 mr-4 text-blue-200 lg:inline-block lg:mt-0 hover:text-white"> Fachverfahren <span></span></a>
+          <a href="/serverSuche" class="block mt-4 mr-4 text-blue-200 lg:inline-block lg:mt-0 hover:text-white"> Server <span></span></a>
+          <a href="/datenbanken" class="block mt-4 mr-4 text-blue-200 lg:inline-block lg:mt-0 hover:text-white"> Datenbanken <span></span></a>
+          <a href="/komponenteServer" class="block mt-4 text-blue-200 lg:inline-block lg:mt-0 hover:text-white"> Komponenten Server <span></span></a>
+          <a href="/persServRelAnsehen" class="block mt-4 text-blue-200 lg:inline-block lg:mt-0 hover:text-white"> Personen Server Beziehungen <span></span></a>
+        </div>
+        <a href="https://www.zitau.de/Seiten/P22.aspx">
+          <img src="https://i.ibb.co/HDtTqF3/ap22solution.png" alt="A P22 Solution" class="w-auto h-8 mb-2" />
+        </a>
+      </div>
+    </nav>
+    <!--! Navbar end-->
+
+    <main class="pt-16">{% block content %} {% endblock %}</main>
+
+    <!-- Footer -->
+    <footer class="text-white bg-blue-500">
+      <div class="container flex flex-wrap pt-4 pb-6 mx-auto">
+        <div class="w-full lg:w-1/5 lg:pr-4">
+          <h3 class="mb-2 text-2xl font-bold">Statzy</h3>
+          <p class="mb-2">Statzy ist ein Webprojekt, das HTML Tailwind mit Flask verwendet.</p>
+          <a href="https://github.com/ZIT-P22/StatzyGUI">
+            <img src="https://i.ibb.co/x1s9HWS/Statzy-1.png" alt="Statzy Logo" class="w-auto h-8 mb-2" />
+          </a>
+          <p class="text-sm">&copy; 2023 Statzy by P22. All rights reserved.</p>
+        </div>
+        <div class="w-full lg:w-1/5 lg:px-4">
+          <h3 class="mb-2 text-2xl font-bold">Service</h3>
+          <ul class="leading-normal list-reset">
+            <li class="mb-2"><a href="#">FAQ</a></li>
+            <li class="mb-2"><a href="#">Kontakt</a></li>
+            <li class="mb-2"><a href="#">Report</a></li>
+          </ul>
+        </div>
+        <div class="w-full lg:w-1/5 lg:px-4">
+          <h3 class="mb-2 text-2xl font-bold">Unternehmen</h3>
+          <ul class="leading-normal list-reset">
+            <li class="mb-2"><a href="#">Über uns</a></li>
+            <li class="mb-2"><a href="#">Datenschutz</a></li>
+            <li class="mb-2"><a href="#">Nutzungsbedingungen</a></li>
+            <li class="mb-2"><a href="#"></a></li>
+          </ul>
+        </div>
+        <div class="w-full lg:w-1/5 lg:px-4">
+          <h3 class="mb-2 text-2xl font-bold">Hilfreiche Links</h3>
+          <ul class="leading-normal list-reset">
+            <li class="mb-2"><a href="#">Fachverfahren</a></li>
+            <li class="mb-2"><a href="#">Server</a></li>
+            <li class="mb-2"><a href="#">Datenbanken</a></li>
+            <li class="mb-2"><a href="#">Komponenten Server</a></li>
+          </ul>
+        </div>
+        <div class="w-full lg:w-1/5 lg:pl-4">
+          <h3 class="mb-2 text-2xl font-bold">Wichtiges</h3>
+          <ul class="leading-normal list-reset">
+            <li class="mb-2"><a href="#">Impressum</a></li>
+            <li class="mb-2"><a href="#">Datenschutz</a></li>
+            <li class="mb-2"><a href="#">Nutzungsbedingungen</a></li>
+            <li class="mb-2"><a href="#"></a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+    <!--! Footer end-->
+
+    <script>
+      // Get viewport height
+      let vh = window.innerHeight * 0.01;
+      // Set document variable
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      // On window resize, recalculate viewport height
+      window.addEventListener('resize', () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      });
+    </script>
+  </body>
+</html>

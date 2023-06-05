@@ -1,0 +1,8 @@
+Backup ausführen befehl
+
+pg_dump -U postgres -F c -b -v -f statzyinit.backup statzy
+
+
+Backup laden befehl
+
+pg_restore -U postgres -F c -d statzy statzyinit.backup

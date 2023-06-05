@@ -1,0 +1,1012 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: ins_timestamp(); Type: FUNCTION; Schema: public; Owner: fxspangenberg
+--
+
+CREATE FUNCTION public.ins_timestamp() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    NEW.zeitpunkt_ins := now();
+    NEW.user_ins := current_user;
+    NEW.zeitpunkt_upd := NULL;
+    NEW.user_upd := NULL;
+    RETURN NEW;
+  END
+$$;
+
+
+ALTER FUNCTION public.ins_timestamp() OWNER TO fxspangenberg;
+
+--
+-- Name: upd_timestamp(); Type: FUNCTION; Schema: public; Owner: fxspangenberg
+--
+
+CREATE FUNCTION public.upd_timestamp() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+  BEGIN
+    NEW.zeitpunkt_upd := now();
+    NEW.user_upd := current_user;
+    NEW.zeitpunkt_ins := OLD.zeitpunkt_ins;
+    NEW.user_ins := OLD.user_ins;
+    RETURN NEW;
+  END
+$$;
+
+
+ALTER FUNCTION public.upd_timestamp() OWNER TO fxspangenberg;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: auswahl_cpu; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_cpu (
+    cpu character varying NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_cpu OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_datenbank; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_datenbank (
+    datenbank text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_datenbank OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_erreichbarkeit; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_erreichbarkeit (
+    erreichbarkeit text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_erreichbarkeit OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_nic; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_nic (
+    nic text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_nic OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_os; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_os (
+    os character varying NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_os OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_ram; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_ram (
+    ram text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_ram OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_server; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_server (
+    server text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_server OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_speicher; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_speicher (
+    speicher text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_speicher OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_typ; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_typ (
+    typ character varying NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_typ OWNER TO fxspangenberg;
+
+--
+-- Name: auswahl_umgebung; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.auswahl_umgebung (
+    umgebung text NOT NULL
+);
+
+
+ALTER TABLE public.auswahl_umgebung OWNER TO fxspangenberg;
+
+--
+-- Name: datenbank; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.datenbank (
+    name character varying,
+    "clusterlösung" text,
+    instanz integer,
+    "größe" integer,
+    typ character varying,
+    fachverfahren text NOT NULL,
+    server integer,
+    zeitpunkt_ins timestamp without time zone,
+    user_ins text,
+    zeitpunkt_upd timestamp without time zone,
+    user_upd text
+);
+
+
+ALTER TABLE public.datenbank OWNER TO fxspangenberg;
+
+--
+-- Name: fachverfahren; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.fachverfahren (
+    name text,
+    verf_id text NOT NULL,
+    tag text,
+    vewendungszweck text,
+    laufzeitverfahren text,
+    auftraggeber integer,
+    verf_betreuung integer,
+    kundenmanagement integer,
+    fachadministation integer
+);
+
+
+ALTER TABLE public.fachverfahren OWNER TO fxspangenberg;
+
+--
+-- Name: person; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.person (
+    name character varying NOT NULL,
+    telefonnummer character varying,
+    dez character varying,
+    vornam character varying,
+    person_id integer NOT NULL,
+    zeitpunkt_ins timestamp without time zone,
+    user_ins text,
+    zeitpunkt_upd timestamp without time zone,
+    user_upd text
+);
+
+
+ALTER TABLE public.person OWNER TO fxspangenberg;
+
+--
+-- Name: server_person; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.server_person (
+    server_id integer,
+    person_id integer
+);
+
+
+ALTER TABLE public.server_person OWNER TO fxspangenberg;
+
+--
+-- Name: datenbank_gesamt; Type: VIEW; Schema: public; Owner: fxspangenberg
+--
+
+CREATE VIEW public.datenbank_gesamt AS
+ SELECT fachverfahren.name AS verf_name,
+    fachverfahren.verf_id,
+    fachverfahren.tag AS verf_tag,
+    fachverfahren.vewendungszweck AS verf_verwendungszweck,
+    fachverfahren.laufzeitverfahren,
+    p_auftr.name AS name_auftraggeber,
+    p_auftr.vornam AS vornam_auftraggeber,
+    p_auftr.telefonnummer AS telefonnummer_auftraggeber,
+    p_auftr.dez AS dez_auftraggeber,
+    p_betr.name AS name_verfahrensbetreuung,
+    p_betr.vornam AS vornam_verfahrensbetreuung,
+    p_betr.telefonnummer AS telefonnummer_verfahrensbetreuung,
+    p_betr.dez AS dez_verfahrensbetreuung,
+    p_kmgmt.name AS name_kundenmanagement,
+    p_kmgmt.vornam AS vornam_kundenmanagement,
+    p_kmgmt.telefonnummer AS telefonnummer_kundenmanagement,
+    p_kmgmt.dez AS dez_kundenmanagement,
+    p_admin.name AS name_fachadministration,
+    p_admin.vornam AS vornam_fachadministration,
+    p_admin.telefonnummer AS telefonnummer_fachadministration,
+    p_admin.dez AS dez_fachadministration,
+    datenbank.name AS db_name,
+    datenbank.typ AS db_typ,
+    p_user.name AS name_user,
+    p_user.vornam AS vornam_user,
+    p_user.telefonnummer AS telefonnummer_user,
+    p_user.dez AS dez_user
+   FROM (((((((public.fachverfahren
+     LEFT JOIN public.person p_auftr ON ((fachverfahren.auftraggeber = p_auftr.person_id)))
+     LEFT JOIN public.person p_betr ON ((fachverfahren.verf_betreuung = p_betr.person_id)))
+     LEFT JOIN public.person p_kmgmt ON ((fachverfahren.kundenmanagement = p_kmgmt.person_id)))
+     LEFT JOIN public.person p_admin ON ((fachverfahren.fachadministation = p_admin.person_id)))
+     JOIN public.datenbank ON ((datenbank.fachverfahren = fachverfahren.verf_id)))
+     LEFT JOIN public.server_person ON ((datenbank.server = server_person.server_id)))
+     JOIN public.person p_user ON ((p_user.person_id = server_person.person_id)));
+
+
+ALTER TABLE public.datenbank_gesamt OWNER TO fxspangenberg;
+
+--
+-- Name: person_person_id_seq; Type: SEQUENCE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE SEQUENCE public.person_person_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.person_person_id_seq OWNER TO fxspangenberg;
+
+--
+-- Name: person_person_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fxspangenberg
+--
+
+ALTER SEQUENCE public.person_person_id_seq OWNED BY public.person.person_id;
+
+
+--
+-- Name: server; Type: TABLE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TABLE public.server (
+    server_id integer NOT NULL,
+    fachverfahren text NOT NULL,
+    name character varying,
+    umgebung text,
+    laufzeit_server text,
+    bereitstellungszeitpunkt timestamp without time zone,
+    verwendungszweck character varying,
+    typ character varying,
+    netzwerk character varying,
+    ram character varying,
+    cpu character varying,
+    os character varying,
+    speichertyp character varying,
+    "kapazität" text,
+    erreichbarkeit character varying,
+    "hochverfügbarkeit" boolean,
+    vertraulichkeit text,
+    "verfügbarkeit" text,
+    "integrität" text,
+    anmerkungen text,
+    zeitpunkt_ins timestamp without time zone,
+    user_ins text,
+    zeitpunkt_upd timestamp without time zone,
+    user_upd text
+);
+
+
+ALTER TABLE public.server OWNER TO fxspangenberg;
+
+--
+-- Name: server_gesamt; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW public.server_gesamt AS
+ SELECT fachverfahren.name AS fachverfahren_name,
+    fachverfahren.tag,
+    server.verwendungszweck,
+    fachverfahren.laufzeitverfahren,
+    fachverfahren.kundenmanagement,
+    fachverfahren.fachadministation,
+    server.name AS server_name,
+    server.umgebung,
+    server.laufzeit_server,
+    server.bereitstellungszeitpunkt,
+    server.verwendungszweck AS server_verwendungszweck,
+    server.typ,
+    server.ram,
+    server.cpu,
+    server.netzwerk,
+    server.os,
+    server.speichertyp,
+    server."kapazität",
+    server.erreichbarkeit,
+    server."hochverfügbarkeit",
+    server.vertraulichkeit,
+    server."verfügbarkeit",
+    server."integrität",
+    server.anmerkungen,
+    person_auftraggeber.name AS name_auftraggeber,
+    person_auftraggeber.telefonnummer AS telefonnummer_auftraggeber,
+    person_auftraggeber.dez AS dez_auftraggeber,
+    person_auftraggeber.vornam AS vornam_auftraggeber,
+    person_kundenmanagement.name AS name_kundenmanagement,
+    person_kundenmanagement.telefonnummer AS telefonnummer_kundenmanagement,
+    person_kundenmanagement.dez AS dez_kundenmanagement,
+    person_kundenmanagement.vornam AS vornam_kundenmanagement,
+    person_fachadministation.name AS name_fachadministation,
+    person_fachadministation.telefonnummer AS telefonnummer_fachadministation,
+    person_fachadministation.dez AS dez_fachadministation,
+    person_fachadministation.vornam AS vornam_fachadministation,
+    person_verf_betreuung.name AS name_betreuung,
+    person_verf_betreuung.telefonnummer AS telefonnummer_betreuung,
+    person_verf_betreuung.dez AS dez_betreuung,
+    person_verf_betreuung.vornam AS vornam_betreuung
+   FROM (((((public.fachverfahren
+     JOIN public.server ON ((server.fachverfahren = fachverfahren.verf_id)))
+     LEFT JOIN public.person person_auftraggeber ON ((fachverfahren.auftraggeber = person_auftraggeber.person_id)))
+     LEFT JOIN public.person person_kundenmanagement ON ((fachverfahren.kundenmanagement = person_kundenmanagement.person_id)))
+     LEFT JOIN public.person person_fachadministation ON ((fachverfahren.fachadministation = person_fachadministation.person_id)))
+     LEFT JOIN public.person person_verf_betreuung ON ((fachverfahren.verf_betreuung = person_verf_betreuung.person_id)));
+
+
+ALTER TABLE public.server_gesamt OWNER TO postgres;
+
+--
+-- Name: server_server_id_seq; Type: SEQUENCE; Schema: public; Owner: fxspangenberg
+--
+
+CREATE SEQUENCE public.server_server_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.server_server_id_seq OWNER TO fxspangenberg;
+
+--
+-- Name: server_server_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fxspangenberg
+--
+
+ALTER SEQUENCE public.server_server_id_seq OWNED BY public.server.server_id;
+
+
+--
+-- Name: serveruser; Type: VIEW; Schema: public; Owner: fxspangenberg
+--
+
+CREATE VIEW public.serveruser AS
+ SELECT person.name,
+    person.vornam,
+    person.dez,
+    person.telefonnummer,
+    server.name AS servername,
+    server_person.server_id
+   FROM ((public.server_person
+     JOIN public.person USING (person_id))
+     JOIN public.server USING (server_id));
+
+
+ALTER TABLE public.serveruser OWNER TO fxspangenberg;
+
+--
+-- Name: verfahrenuser; Type: VIEW; Schema: public; Owner: faandrijanow
+--
+
+CREATE VIEW public.verfahrenuser AS
+ SELECT fachverfahren.name AS fachverfahren_name,
+    server.name AS server_name,
+    person.vornam,
+    person.name AS personen_name,
+    person.dez,
+    person.telefonnummer
+   FROM (((public.server
+     JOIN public.fachverfahren ON ((fachverfahren.verf_id = server.fachverfahren)))
+     JOIN public.server_person USING (server_id))
+     JOIN public.person USING (person_id));
+
+
+ALTER TABLE public.verfahrenuser OWNER TO faandrijanow;
+
+--
+-- Name: person person_id; Type: DEFAULT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.person ALTER COLUMN person_id SET DEFAULT nextval('public.person_person_id_seq'::regclass);
+
+
+--
+-- Name: server server_id; Type: DEFAULT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server ALTER COLUMN server_id SET DEFAULT nextval('public.server_server_id_seq'::regclass);
+
+
+--
+-- Data for Name: auswahl_cpu; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_cpu (cpu) FROM stdin;
+1 Core
+2 Core
+4 Core
+8 Core
+>8 Core
+1 vCPU
+2 vCPU
+4 vCPU
+8 vCPU
+>8 vCPU
+\.
+
+
+--
+-- Data for Name: auswahl_datenbank; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_datenbank (datenbank) FROM stdin;
+Informik
+MSSQL
+MySQL
+Oracle
+PostgreSQL
+embedded DB
+\.
+
+
+--
+-- Data for Name: auswahl_erreichbarkeit; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_erreichbarkeit (erreichbarkeit) FROM stdin;
+Internet(DMZ)
+Nur Intern.(Kernnetz)
+\.
+
+
+--
+-- Data for Name: auswahl_nic; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_nic (nic) FROM stdin;
+<= 1Gbps
+nx 1Gbps
+nx 10Gbps
+=10Gbps
+andere Bandbreite
+\.
+
+
+--
+-- Data for Name: auswahl_os; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_os (os) FROM stdin;
+Windows Server 2016
+Windows Server 2019
+Red Hat 8.x
+Red Hat 9.x
+SLES 12 SP5
+SLES 12 SP4
+Ubuntu (nur Test)
+\.
+
+
+--
+-- Data for Name: auswahl_ram; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_ram (ram) FROM stdin;
+1 GB
+2 GB
+4 GB
+8 GB
+16 GB
+32 GB
+64 GB
+128 GB
+256 GB
+\.
+
+
+--
+-- Data for Name: auswahl_server; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_server (server) FROM stdin;
+Applikationserver (AP)
+Citrixserver CX
+Connectoren (SMB-, NFS-Storagegateways) (CO)
+Datenbankserver (DB)
+Domain-Controller (DC)
+Fileserver (FS)
+Firewall (FW)
+Housingsysteme (HQ)
+Infrastruktursysteme (IS)
+Load-Balancer (LB)
+Monitor-/Managementserver (MS)
+Mailserver (MX)
+Printserver (PS)
+Domain-Controller Root-Domain (RD)
+Terminsalserver
+Webserver (WE)
+\.
+
+
+--
+-- Data for Name: auswahl_speicher; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_speicher (speicher) FROM stdin;
+class-A
+class-B
+class-C
+class-D
+class-E
+class-F
+lokale Disk
+\.
+
+
+--
+-- Data for Name: auswahl_typ; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_typ (typ) FROM stdin;
+physisch
+virtuell
+container
+\.
+
+
+--
+-- Data for Name: auswahl_umgebung; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.auswahl_umgebung (umgebung) FROM stdin;
+physisch
+virtuell
+Container
+\.
+
+
+--
+-- Data for Name: datenbank; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.datenbank (name, "clusterlösung", instanz, "größe", typ, fachverfahren, server, zeitpunkt_ins, user_ins, zeitpunkt_upd, user_upd) FROM stdin;
+DB1234	''	12	1024	''	4711	1	2022-11-09 09:58:37.897665	fxspangenberg	''	''
+DB01	ja	12	180	MSSQL	4711	''	2022-11-10 14:01:04.588558	fxspangenberg	''	''
+\.
+
+
+--
+-- Data for Name: fachverfahren; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.fachverfahren (name, verf_id, tag, vewendungszweck, laufzeitverfahren, auftraggeber, verf_betreuung, kundenmanagement, fachadministation) FROM stdin;
+Testverfahren	4711	TST-01	Nur zum Test verwenden	''	1	2	3	4
+a	4712	T1	testen	1 Jahr	7	7	7	7
+\.
+
+
+--
+-- Data for Name: person; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.person (name, telefonnummer, dez, vornam, person_id, zeitpunkt_ins, user_ins, zeitpunkt_upd, user_upd) FROM stdin;
+Müller	123456	2.6	Heinz	1	2022-11-09 08:24:54.277163	fxspangenberg	''	''
+Reich	123456	2.3	Sieglinde	2	2022-11-09 08:24:54.277163	fxspangenberg	''	''
+Wohlthat	123556	4.1	Friedrich	3	2022-11-09 08:24:54.277163	fxspangenberg	''	''
+Luchs	1238956	4.2	Karin	4	2022-11-09 08:24:54.277163	fxspangenberg	''	''
+Kaiser	12365636	4.3	Theodor	5	2022-11-09 08:24:54.277163	fxspangenberg	''	''
+Düsselfeld	1234567890	2.1	Gerlinde	6	2022-11-09 13:17:07.539225	fxspangenberg	''	''
+Abel	110	5.3	Lukas	7	2022-11-09 13:38:30.559335	fxspangenberg	''	''
+Heinrich	12345	4.2	Müller	8	2022-11-10 09:37:20.765067	fxspangenberg	''	''
+Auch Martin	123456778	2.6	Martin	9	2022-11-10 10:13:21.318025	fxspangenberg	''	''
+Lukas	12345677	2.6	Lukas	10	2022-11-10 10:13:45.12144	fxspangenberg	''	''
+Lukas	1234567	2.6	Lukas	11	2022-11-10 10:14:27.634261	fxspangenberg	''	''
+Lukas	353333	2.6	Leba	12	2022-11-10 12:09:52.643085	fxspangenberg	''	''
+\.
+
+
+--
+-- Data for Name: server; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.server (server_id, fachverfahren, name, umgebung, laufzeit_server, bereitstellungszeitpunkt, verwendungszweck, typ, netzwerk, ram, cpu, os, speichertyp, "kapazität", erreichbarkeit, "hochverfügbarkeit", vertraulichkeit, "verfügbarkeit", "integrität", anmerkungen, zeitpunkt_ins, user_ins, zeitpunkt_upd, user_upd) FROM stdin;
+1	4711	beap-00188-099	virtuell	''	''	''	''	''	''	''	Red Hat 8.x	''	''	''	''	''	''	''	''	2022-11-09 08:27:03.335977	fxspangenberg	''	''
+3	4711	beap	physisch	1 Jahr	2021-10-20 00:00:00	Applikationserver (AP)	''	nx 1Gbps	4 GB	8 Core	SLES 12 SP5	class-F	12GB	Internet(DMZ)	f	a	b	c	qbcde	2022-11-10 13:51:45.61189	fxspangenberg	''	''
+\.
+
+
+--
+-- Data for Name: server_person; Type: TABLE DATA; Schema: public; Owner: fxspangenberg
+--
+
+COPY public.server_person (server_id, person_id) FROM stdin;
+1	1
+1	2
+1	3
+1	4
+1	5
+\.
+
+
+--
+-- Name: person_person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fxspangenberg
+--
+
+SELECT pg_catalog.setval('public.person_person_id_seq', 12, true);
+
+
+--
+-- Name: server_server_id_seq; Type: SEQUENCE SET; Schema: public; Owner: fxspangenberg
+--
+
+SELECT pg_catalog.setval('public.server_server_id_seq', 3, true);
+
+
+--
+-- Name: auswahl_cpu auswahl_cpu_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_cpu
+    ADD CONSTRAINT auswahl_cpu_pkey PRIMARY KEY (cpu);
+
+
+--
+-- Name: auswahl_datenbank auswahl_datenbank_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_datenbank
+    ADD CONSTRAINT auswahl_datenbank_pkey PRIMARY KEY (datenbank);
+
+
+--
+-- Name: auswahl_erreichbarkeit auswahl_erreichbarkeit_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_erreichbarkeit
+    ADD CONSTRAINT auswahl_erreichbarkeit_pkey PRIMARY KEY (erreichbarkeit);
+
+
+--
+-- Name: auswahl_nic auswahl_nic_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_nic
+    ADD CONSTRAINT auswahl_nic_pkey PRIMARY KEY (nic);
+
+
+--
+-- Name: auswahl_os auswahl_os_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_os
+    ADD CONSTRAINT auswahl_os_pkey PRIMARY KEY (os);
+
+
+--
+-- Name: auswahl_ram auswahl_ram_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_ram
+    ADD CONSTRAINT auswahl_ram_pkey PRIMARY KEY (ram);
+
+
+--
+-- Name: auswahl_server auswahl_server_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_server
+    ADD CONSTRAINT auswahl_server_pkey PRIMARY KEY (server);
+
+
+--
+-- Name: auswahl_speicher auswahl_speicher_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_speicher
+    ADD CONSTRAINT auswahl_speicher_pkey PRIMARY KEY (speicher);
+
+
+--
+-- Name: auswahl_typ auswahl_typ_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_typ
+    ADD CONSTRAINT auswahl_typ_pkey PRIMARY KEY (typ);
+
+
+--
+-- Name: auswahl_umgebung auswahl_umgebung_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.auswahl_umgebung
+    ADD CONSTRAINT auswahl_umgebung_pkey PRIMARY KEY (umgebung);
+
+
+--
+-- Name: datenbank datenbank_name_key; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.datenbank
+    ADD CONSTRAINT datenbank_name_key UNIQUE (name);
+
+
+--
+-- Name: fachverfahren fachverfahren_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.fachverfahren
+    ADD CONSTRAINT fachverfahren_pkey PRIMARY KEY (verf_id);
+
+
+--
+-- Name: person person_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.person
+    ADD CONSTRAINT person_pkey PRIMARY KEY (person_id);
+
+
+--
+-- Name: server server_name_key; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_name_key UNIQUE (name);
+
+
+--
+-- Name: server server_pkey; Type: CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_pkey PRIMARY KEY (server_id);
+
+
+--
+-- Name: datenbank ins_datenbank; Type: TRIGGER; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TRIGGER ins_datenbank BEFORE INSERT ON public.datenbank FOR EACH ROW EXECUTE FUNCTION public.ins_timestamp();
+
+
+--
+-- Name: person ins_person; Type: TRIGGER; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TRIGGER ins_person BEFORE INSERT ON public.person FOR EACH ROW EXECUTE FUNCTION public.ins_timestamp();
+
+
+--
+-- Name: server ins_server; Type: TRIGGER; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TRIGGER ins_server BEFORE INSERT ON public.server FOR EACH ROW EXECUTE FUNCTION public.ins_timestamp();
+
+
+--
+-- Name: datenbank upd_datenbank; Type: TRIGGER; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TRIGGER upd_datenbank BEFORE UPDATE ON public.datenbank FOR EACH ROW EXECUTE FUNCTION public.upd_timestamp();
+
+
+--
+-- Name: person upd_person; Type: TRIGGER; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TRIGGER upd_person BEFORE UPDATE ON public.person FOR EACH ROW EXECUTE FUNCTION public.upd_timestamp();
+
+
+--
+-- Name: server upd_server; Type: TRIGGER; Schema: public; Owner: fxspangenberg
+--
+
+CREATE TRIGGER upd_server BEFORE UPDATE ON public.server FOR EACH ROW EXECUTE FUNCTION public.upd_timestamp();
+
+
+--
+-- Name: datenbank datenbank_fachverfahren_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.datenbank
+    ADD CONSTRAINT datenbank_fachverfahren_fkey FOREIGN KEY (fachverfahren) REFERENCES public.fachverfahren(verf_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: datenbank datenbank_server_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.datenbank
+    ADD CONSTRAINT datenbank_server_fkey FOREIGN KEY (server) REFERENCES public.server(server_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: datenbank datenbank_typ_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.datenbank
+    ADD CONSTRAINT datenbank_typ_fkey FOREIGN KEY (typ) REFERENCES public.auswahl_datenbank(datenbank) ON UPDATE CASCADE;
+
+
+--
+-- Name: fachverfahren fachverfahren_auftraggeber_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.fachverfahren
+    ADD CONSTRAINT fachverfahren_auftraggeber_fkey FOREIGN KEY (auftraggeber) REFERENCES public.person(person_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: fachverfahren fachverfahren_fachadministation_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.fachverfahren
+    ADD CONSTRAINT fachverfahren_fachadministation_fkey FOREIGN KEY (fachadministation) REFERENCES public.person(person_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: fachverfahren fachverfahren_kundenmanagement_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.fachverfahren
+    ADD CONSTRAINT fachverfahren_kundenmanagement_fkey FOREIGN KEY (kundenmanagement) REFERENCES public.person(person_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: fachverfahren fachverfahren_verf_betreuung_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.fachverfahren
+    ADD CONSTRAINT fachverfahren_verf_betreuung_fkey FOREIGN KEY (verf_betreuung) REFERENCES public.person(person_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_cpu_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_cpu_fkey FOREIGN KEY (cpu) REFERENCES public.auswahl_cpu(cpu) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_erreichbarkeit_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_erreichbarkeit_fkey FOREIGN KEY (erreichbarkeit) REFERENCES public.auswahl_erreichbarkeit(erreichbarkeit) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_fachverfahren_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_fachverfahren_fkey FOREIGN KEY (fachverfahren) REFERENCES public.fachverfahren(verf_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_netzwerk_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_netzwerk_fkey FOREIGN KEY (netzwerk) REFERENCES public.auswahl_nic(nic) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_os_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_os_fkey FOREIGN KEY (os) REFERENCES public.auswahl_os(os) ON UPDATE CASCADE;
+
+
+--
+-- Name: server_person server_person_person_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server_person
+    ADD CONSTRAINT server_person_person_id_fkey FOREIGN KEY (person_id) REFERENCES public.person(person_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: server_person server_person_server_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server_person
+    ADD CONSTRAINT server_person_server_id_fkey FOREIGN KEY (server_id) REFERENCES public.server(server_id) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_ram_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_ram_fkey FOREIGN KEY (ram) REFERENCES public.auswahl_ram(ram) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_speichertyp_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_speichertyp_fkey FOREIGN KEY (speichertyp) REFERENCES public.auswahl_speicher(speicher) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_typ_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_typ_fkey FOREIGN KEY (typ) REFERENCES public.auswahl_typ(typ) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_umgebung_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_umgebung_fkey FOREIGN KEY (umgebung) REFERENCES public.auswahl_umgebung(umgebung) ON UPDATE CASCADE;
+
+
+--
+-- Name: server server_verwendungszweck_fkey; Type: FK CONSTRAINT; Schema: public; Owner: fxspangenberg
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_verwendungszweck_fkey FOREIGN KEY (verwendungszweck) REFERENCES public.auswahl_server(server) ON UPDATE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

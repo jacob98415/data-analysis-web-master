@@ -1,0 +1,193 @@
+{% extends "layout.html" %} {% block content %}
+<div class="font-sans text-gray-900 bg-gray-100">
+    <div class="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h1 class="mb-8 text-3xl font-bold text-center">
+                Fachverfahren
+            </h1>
+
+            <hr class="my-8 border-gray-300" />
+
+            <form action="{{ url_for('fachverfahren.fachverfahrenAnsehen') }}" method="POST" class="max-w-3xl mx-auto">
+                <div class="flex flex-wrap">
+                    <div class="w-full">
+                        <label class="block mb-2 font-bold" for="verfahrens-tag">
+                            Verf.-Tag:
+                        </label>
+                    </div>
+                    <div class="w-4/6 md:w-5/6">
+                        <input
+                            class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            type="text" id="verfahrens-tag" name="tag" value="{{ tag }}">
+                    </div>
+
+                    <div class="w-2/6 pl-4 md:w-1/6">
+                        <button
+                            class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                            type="submit">
+                            Abschicken
+                        </button>
+                    </div>
+            </form>
+
+
+        </div>
+        <!--! form start-->
+        <hr class="my-8 border-gray-300" />
+        <form action="" method="POST" class="max-w-3xl mx-auto">
+            <div class="mb-6">
+                <label class="block mb-2 font-bold" for="it-verfahren-namen">
+                    Namen des IT Verfahrens:
+                </label>
+                <input
+                    class="w-full px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed focus:outline-none focus:shadow-outline"
+                    type="text" id="it-verfahren-namen" name="it-verfahren-namen" value="{{ name }}" readonly
+                    disabled />
+            </div>
+
+            <div class="mb-6">
+                <label class="block mb-2 font-bold" for="verfahrens-id">
+                    Verfahrens-ID:
+                </label>
+                <input
+                    class="w-full px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed focus:outline-none focus:shadow-outline"
+                    type="text" id="verfahrens-id" name="verfahrens-id" value="{{ verf_id }}" readonly disabled>
+            </div>
+
+            <div class="mb-6">
+                <label class="block mb-2 font-bold" for="berichtstellungszeitpunkt">
+                    Verwendungszweck:
+                </label>
+                <input
+                    class="w-full px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed focus:outline-none focus:shadow-outline"
+                    type="text" id="berichtstellungszeitpunkt" name="berichtstellungszeitpunkt"
+                    value="{{ laufzeitverfahren }}" readonly disabled>
+            </div>
+
+            <div class="mb-6 ">
+                <label class="block mb-2 font-bold" for="laufzeit"> Laufzeitverfahren: </label>
+                <input
+                    class="w-full px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed focus:outline-none focus:shadow-outline"
+                    type="text" id="laufzeit" name="laufzeit" value="{{
+            laufzeitverfahren
+            }}" readonly disabled>
+            </div>
+            <!-- Auftraggeber -->
+            <div class="mb-6 ">
+                <label class="block mb-2 font-bold" for="laufzeit"> Auftraggeber: </label>
+                <div class="flex flex-wrap w-full gap-4">
+                    <input
+                        class="px-3 py-2 leading-tight text-gray-900 bg-gray-100 shadow appearance-none cursor-not-allowed flex-grow-2 borderrounded focus:outline-none focus:shadow-outline"
+                        type="text" id="auftraggeber" name="auftraggeber" value="{{auftraggeber}}" readonly disabled>
+                    <input type="hidden" id="idAuftraggeber" name="idAuftraggeber" value="{{idAuftraggeber}}">
+                    <input
+                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded show-user-info hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        type="button" name="showUser" value="..." data-info="User Info" 
+                        onclick="auftraggeberAnsehen()" />
+                </div>
+            </div>
+            <!-- Verfahrens Betreuung -->
+            <div class="mb-6">
+                <label class="block mb-2 font-bold" for="laufzeit"> Verfahrens Betreuung: </label>
+                <div class="flex flex-wrap w-full gap-4">
+                    <input
+                        class="px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed flex-grow-2 focus:outline-none focus:shadow-outline"
+                        type="text" id="verf_betreuung" name="verf_betreuung" value="{{verf_betreuung}}" readonly
+                        disabled>
+                    <input type="hidden" id="idVerfBetreuung" name="idVerfBetreuung" value="{{idVerfBetreuung}}">
+                    <input
+                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded show-user-info hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        type="button" name="showUser" value="..." data-info="User Info"
+                        onclick="verf_betreuungAnsehen()" />
+                </div>
+            </div>
+
+            <!-- Kundenmanagement -->
+            <div class="mb-6">
+                <label class="block mb-2 font-bold" for="laufzeit"> Kundenmanagement: </label>
+                <div class="flex flex-wrap w-full gap-4">
+                    <input
+                        class="px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed flex-grow-2 focus:outline-none focus:shadow-outline"
+                        type="text" id="kundenmanagement" name="kundenmanagement" value="{{kundenmanagement}}" readonly
+                        disabled>
+                    <input type="hidden" id="idKundenmanagement" name="idKundenmanagement" value="{{idKundenmanagement}}">
+                    <input
+                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded show-user-info hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        type="button" name="showUser" value="..." data-info="User Info"
+                        onclick="kundenmanagementAnsehen()" />
+                </div>
+            </div>
+
+            <!-- Fachadministration -->
+            <div class="mb-6">
+                <label class="block mb-2 font-bold" for="laufzeit"> Fachadministration: </label>
+                <div class="flex flex-wrap w-full gap-4">
+                    <input
+                        class="px-3 py-2 leading-tight text-gray-900 bg-gray-100 border rounded shadow appearance-none cursor-not-allowed flex-grow-2 focus:outline-none focus:shadow-outline"
+                        type="text" id="fachadministration" name="fachadministration" value="{{fachadministration}}"
+                        readonly disabled>
+                    <input type="hidden" id="idFachadministration" name="idFachadministration" value="{{idFachadministration}}">
+                    <input
+                        class="px-4 py-2 font-bold text-white bg-blue-500 rounded show-user-info hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                        type="button" name="showUser" value="..." data-info="User Info"
+                        onclick="fachadministrationAnsehen()" />
+                </div>
+            </div>
+
+            <hr class="my-8 border-gray-300 " />
+
+        </form>
+        <form action="{{ url_for('fachverfahren.fachverfahrenEditieren') }}" method="POST">
+            <div class="flex items-center justify-center">
+                <input class="hidden" type="text" id="verfahrens-tag" name="tag" value="{{ tag }}">
+                <button
+                    class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                    type="submit">
+                    Editieren
+                </button>
+            </div>
+        </form>
+        <!--! form end-->
+    </div>
+</div>
+
+
+<script>
+    const showUserInfoBtns = document.querySelectorAll(".show-user-info");
+
+    showUserInfoBtns.forEach((showUserInfoBtn) => {
+        showUserInfoBtn.addEventListener("mouseover", () => {
+            showUserInfoBtn.classList.add("expanded");
+            showUserInfoBtn.value = showUserInfoBtn.dataset.info;
+        });
+
+        showUserInfoBtn.addEventListener("mouseout", () => {
+            showUserInfoBtn.classList.remove("expanded");
+            setTimeout(() => {
+                showUserInfoBtn.value = "...";
+            }, 500);
+        });
+    });
+
+    //? Person ansehen von dem Namen der vor der inputbox steht
+    function auftraggeberAnsehen() {
+        // wenn der knopf gedrückt wird, wird eine anfrage an peronAnsehen gesendet mit dem anhang ?id= der id des auftraggebers
+        window.location.href = "{{ url_for('person.personAnsehen') }}?id=" + document.getElementById("idAuftraggeber").value;
+
+    }
+    function verf_betreuungAnsehen() {
+        window.location.href = "{{ url_for('person.personAnsehen') }}?id=" + document.getElementById("idVerfBetreuung").value;
+
+    }
+    function kundenmanagementAnsehen() {
+        window.location.href = "{{ url_for('person.personAnsehen') }}?id=" + document.getElementById("idKundenmanagement").value;
+
+    }
+    function fachadministrationAnsehen() {
+        window.location.href = "{{ url_for('person.personAnsehen') }}?id=" + document.getElementById("idFachadministration").value;
+
+    }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %} {% block content %}
+
+<body class="bg-gray-100">
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-md px-6 py-8 bg-white rounded-lg shadow-md">
+      <h1 class="mb-4 text-2xl font-medium">Select a table</h1>
+      <form method="post" action="/query">
+        <div class="mb-4">
+          <label class="block mb-2 font-bold text-gray-700" for="table">
+            Table:
+          </label>
+          <div class="relative">
+            <select
+              class="block w-full px-4 py-3 pr-8 leading-tight text-gray-700 bg-gray-200 border border-gray-200 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
+              id="table" name="table">
+              {% for table in tables %}
+              <option value="{{ table }}">{{ table }}</option>
+              {% endfor %}
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none">
+              <svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                <path fill-rule="evenodd" d="M10 18a8 8 0 110-16 8 8 0 010 16zm0-2a6 6 0 100-12 6 6 0 000 12z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <button
+          class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+          type="submit">
+          Show Results
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
+
+{% endblock %}

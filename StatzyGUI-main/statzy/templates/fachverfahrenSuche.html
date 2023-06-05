@@ -1,0 +1,57 @@
+{% extends "layout.html" %} {% block content %}
+<div class="font-sans text-gray-900 bg-gray-100">
+    <div class="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h1 class="mb-8 text-3xl font-bold text-center">
+                Fachverfahren Suchen
+            </h1>
+
+            <hr class="my-8 border-gray-300" />
+
+            <form action="{{ url_for('fachverfahren.fachverfahrenAnsehen') }}" method="POST" class="max-w-3xl mx-auto">
+                <div class="flex flex-wrap">
+                    <div class="w-full">
+                        <label class="block mb-2 font-bold" for="verfahrens-tag">
+                            Verf.-Tag:
+                        </label>
+                    </div>
+                    <div class="w-4/6 md:w-5/6">
+                        <input
+                            class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            type="text" id="verfahrens-tag" name="tag" value="{{ tag }}">
+                    </div>
+
+                    <div class="w-2/6 pl-4 md:w-1/6">
+                        <button
+                            class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                            type="submit">
+                            Abschicken
+                        </button>
+                    </div>
+            </form>
+
+            {% if warning == 1 %}
+            <div class="max-w-md mx-auto mt-8">
+                <div class="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md">
+                    <p class="mb-4 font-bold text-center text-red-500">Diesen Tag gibt es nicht!</p>
+                    <form action="{{ url_for('fachverfahren.fachverfahrenErstellen') }}" method="POST"
+                        class="flex items-center justify-center">
+                        <input class="hidden" type="text" id="verfahrens-tag" name="tag" value="{{ tag }}">
+                        <!--? input der hidden ist und die information weitergibt das zum ersten mal die seite erstellen aufgerufen wird-->
+                        <input class="hidden" type="text" id="edit-info" name="edit" value="0">
+                        <button
+                            class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                            type="submit">
+                            Erstellen
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

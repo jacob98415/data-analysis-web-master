@@ -1,0 +1,156 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="font-sans text-gray-900 bg-gray-100">
+  <div class="py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <h1 class="mb-8 text-3xl font-bold text-center">
+        Fachverfahren Editieren
+      </h1>
+      <form action="{{ url_for('fachverfahren.fachverfahrenUpdate') }}" method="POST" class="max-w-3xl mx-auto">
+        <script>
+          var suggestionsMap = {};
+
+          function showSuggestions(input, fieldId) {
+            if (input.length == 0) {
+              document.getElementById(fieldId + "-list").innerHTML = "";
+              return;
+            }
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+              if (this.readyState == 4 && this.status == 200) {
+                var names = JSON.parse(this.responseText);
+                var suggestions = "";
+                for (var i = 0; i < names.length; i++) {
+                  suggestions += "<option value='" + names[i].name + "' data-vorname='" + names[i].vornam + "' data-nachname='" + names[i].name + "' data-dez='" + names[i].dez + "' data-person-id='" + names[i].person_id + "'>" + names[i].person_id + " " + names[i].vornam + " " + names[i].name + " (" + names[i].dez + ") </option>";
+                  // Update the suggestionsMap
+                  suggestionsMap[names[i].name] = names[i].person_id + " " + names[i].vornam + " " + names[i].name + " (" + names[i].dez + ")";
+                }
+                document.getElementById(fieldId + "-list").innerHTML = suggestions;
+              }
+            };
+            xmlhttp.open("GET", "/getnames?input=" + input, true);
+            xmlhttp.send();
+          }
+
+          function setPersonId(input, fieldId) {
+            var options = document.getElementById(fieldId + '-list').options;
+            for (var i = 0; i < options.length; i++) {
+              if (options[i].value == input.value) {
+                var personId = options[i].getAttribute('data-person-id');
+                document.getElementById(fieldId + '-id').value = personId;
+                // Set input field to match suggestion format
+                input.value = suggestionsMap[input.value];
+                break;
+              }
+            }
+          }
+
+        </script>
+
+        <hr class="my-8 border-gray-300" />
+
+        <div class="max-w-3xl mx-auto">
+          <div class="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md">
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="verfahrens-tag">
+                Verf.-Tag:
+              </label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="verfahrens-tag" name="tag" value="{{ tag }}">
+            </div>
+
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="it-verfahren-namen">
+                Namen des IT Verfahrens:
+              </label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="it-verfahren-namen" name="it-verfahren-namen" value="{{ name}}" />
+            </div>
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="verfahrens-id">
+                Verfahrens-ID:
+              </label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="verfahrens-id" name="verfahrens-id" value="{{ verf_id }}" />
+            </div>
+
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="verwendungszweck">
+                Verwendungszweck:
+              </label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="verwendungszweck" name="verwendungszweck" value="{{ vewendungszweck }}">
+            </div>
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="laufzeit">
+                Laufzeit:
+              </label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="laufzeit" name="laufzeit" value="{{ laufzeitverfahren }}">
+            </div>
+
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="auftraggeber">Auftraggeber:</label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="auftraggeber" name="auftraggeber" value="{{ auftraggeber }}"
+                oninput="showSuggestions(this.value, 'auftraggeber'); setPersonId(this, 'auftraggeber');"
+                autocomplete="off" list="auftraggeber-list">
+              <datalist id="auftraggeber-list" class="mt-1 bg-white rounded-md shadow-lg suggestions-list"></datalist>
+              <input type="hidden" id="auftraggeber-id" name="auftraggeber-id">
+            </div>
+
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="verf_bet">Verfahrens Betreuung:</label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="verf_bet" name="verf_bet" value="{{ verf_betreuung }}"
+                oninput="showSuggestions(this.value, 'verf_bet'); setPersonId(this, 'verf_bet');" autocomplete="off"
+                list="verf_bet-list">
+              <datalist id="verf_bet-list" class="mt-1 bg-white rounded-md shadow-lg suggestions-list"></datalist>
+              <input type="hidden" id="verf_bet-id" name="verf_bet-id">
+            </div>
+
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="kundenmanagement">Kundenmanagement:</label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="kundenmanagement" name="kundenmanagement" value="{{ kundenmanagement }}"
+                oninput="showSuggestions(this.value, 'kundenmanagement'); setPersonId(this, 'kundenmanagement');"
+                autocomplete="off" list="kundenmanagement-list">
+              <datalist id="kundenmanagement-list"
+                class="mt-1 bg-white rounded-md shadow-lg suggestions-list"></datalist>
+              <input type="hidden" id="kundenmanagement-id" name="kundenmanagement-id">
+            </div>
+
+            <div class="mb-6">
+              <label class="block mb-2 font-bold" for="fachadmin">Fachadministration:</label>
+              <input
+                class="w-full px-3 py-2 leading-tight text-gray-900 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                type="text" id="fachadmin" name="fachadmin" value="{{ fachadministration }}"
+                oninput="showSuggestions(this.value, 'fachadmin'); setPersonId(this, 'fachadmin');" autocomplete="off"
+                list="fachadmin-list">
+              <datalist id="fachadmin-list" class="mt-1 bg-white rounded-md shadow-lg suggestions-list"></datalist>
+              <input type="hidden" id="fachadmin-id" name="fachadmin-id">
+            </div>
+
+
+            <hr class="my-8 border-gray-300" />
+
+            <div class="flex items-center justify-center">
+              <button
+                class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                type="submit">Ändern</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

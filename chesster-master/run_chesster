@@ -1,0 +1,25 @@
+#!/bin/bash
+
+show_help () {
+	echo -e "\nUsage: `basename $0` <SCRIPT>\n"
+	echo -e "\t<SCRIPT>\t\tChesster script to run\n"
+	echo -e "Supported scripts:\n"
+	for script in $( $PYC -m chesster ); do
+		echo $script
+	done | sed -r -e "s/^[^_]+_/\t/g"
+	echo
+	exit 1
+}
+
+[ -z $( command -v python3 ) ] && PYC="python" || PYC="python3"
+[ -v $( command -v $PYC ) ] && { echo "No python installed."; show_help; }
+echo "-- using python command: $PYC"
+
+RUNSCRIPT=$1
+[ -v $RUNSCRIPT ] && { echo "No script selected."; show_help; }
+shift
+
+CMD="$PYC -m chesster.chesster_${RUNSCRIPT} $@"
+echo "-- $CMD"
+eval $CMD
+[ $? == 2 ] && { echo "Script '$RUNSCRIPT' does not exist."; show_help; }

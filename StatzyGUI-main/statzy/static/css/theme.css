@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@media (min-width: 1024px) {
+  .navbar-padding {
+    padding: 1.5rem 1.5rem 0.87rem 1.5rem;
+  }
+
+  .navbar-links a {
+    margin-bottom: -1.5rem;
+    padding: 0 25px 1.5rem;
+    transition: all ease-in-out 0.3s;
+    bottom: -4px;
+  }
+
+  .navbar-links a.active-link {
+    color: rgb(17, 24, 39);
+    background-color: rgb(243 244 246);
+    position: relative;
+  }
+
+  .navbar-links a.active-link span {
+    position: absolute;
+    width: calc(100% - 20px);
+    height: 20px;
+    background-color: rgb(243 244 246);
+    top: -17px;
+    left: 10px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+  }
+
+  .navbar-links a.active-link:before,
+  .navbar-links a.active-link:after {
+    transition: all ease-in-out 0.3s;
+    content: '';
+    background-color: rgb(59, 130, 246);
+    /* background-color: #000; */
+    display: block;
+    position: absolute;
+    width: 10px;
+    height: 100%;
+    bottom: 0;
+  }
+
+  .navbar-links a.active-link:before {
+    left: 0;
+    border-bottom-right-radius: 50px;
+  }
+
+  .navbar-links a.active-link:after {
+    right: 0;
+    border-bottom-left-radius: 50px;
+  }
+}
+
+.flex-grow-2 {
+  flex-grow: 2;
+}
+
+.show-user-info {
+  max-width: 2.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 0.5s ease;
+}
+
+.show-user-info:hover,
+.show-user-info.expanded {
+  max-width: 13rem;
+}
